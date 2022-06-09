@@ -4,8 +4,12 @@
  */
 package KTP.Enterprise;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  *
@@ -13,8 +17,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class DataController {
+   
+    DataJpaController ctrl = new DataJpaController();
+    List<Data> newData = new ArrayList<>();
+    
     @RequestMapping("/data")
-    public String getDataKTP(){
+    public String getDataKTP(Model model) {
+        int record = ctrl.getDataCount();
+        String result ="";
+        try {
+            newData = ctrl.findDataEntities().subList(0, record);
+        } catch (Exception e) {
+            result=e.getMessage();
+        }
+        model.addAttribute("goData", newData);
+        model.addAttribute("record", record);
+        
+        
         return "database";
     }
+    
 }
